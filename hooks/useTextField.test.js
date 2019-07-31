@@ -1,28 +1,23 @@
 
-import { act } from 'react-dom/test-utils';
-import { testHook } from '../testUtils';
+import { renderHook, act } from '@testing-library/react-hooks';
 import useTextField from './useTextField';
-
-let nameField;
-beforeEach(() => {
-  testHook(() => {
-    nameField = useTextField('name');
-  });
-});
 
 describe('useTextField', () => {
   test('should have an onChange function', () => {
-    expect(nameField.onChange).toBeInstanceOf(Function);
+    const { result } = renderHook(() => useTextField());
+    expect(result.current.onChange).toBeInstanceOf(Function);
   });
 
   test('should have correct name', () => {
-    expect(nameField.name).toBe('name');
+    const { result } = renderHook(() => useTextField('name'));
+    expect(result.current.name).toBe('name');
   });
 
   test('should update the value when onChange is called', () => {
+    const { result } = renderHook(() => useTextField());
     act(() => {
-      nameField.onChange({ target: { value: 'nitin' } });
+      result.current.onChange({ target: { value: 'nitin' } });
     });
-    expect(nameField.value).toBe('nitin');
+    expect(result.current.value).toBe('nitin');
   });
 });
